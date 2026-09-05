@@ -97,7 +97,7 @@ def login(creds: UserCredentials):
 # GET /public/info
 # A route anyone can access, no auth required.
 # ==========================================================================
-@app.get("/public/info", status_code=status.HTTP_200_OK)
+@app.get("/public/info", status_code=status.HTTP_200_OK) 
 def public_info():
     return {"message": "Welcome stranger! This info is public."}
 
