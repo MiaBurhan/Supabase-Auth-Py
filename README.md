@@ -91,3 +91,14 @@ curl -i http://localhost:3000/protected/profile
 ```
 
 It should give error 401 `{"error":"Access token required"}`
+
+### Protected Gate with token
+```bash
+curl -i http://localhost:3000/protected/profile \
+  -H "Authorization: Bearer PASTE_ACCESS_TOKEN_HERE"
+```
+### Logout
+```bash
+curl -X POST http://localhost:3000/auth/logout \
+  -H "Authorization: Bearer eyJhbGciOiJFUzI1NiIsImtpZCI6IjIyN2ZlNzdlLTg4ZjUtNGZiMi1hZjdjLWFkZDI1OGI3OWIxZSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3l5cmljeGpldGt2eW1neXdpb29qLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmOWE1ZmNhMy1jNmFjLTRjMzktODljZC1hYmRiZDFlMzlhOTIiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzg4NTc2Mjc5LCJpYXQiOjE3ODg1NzI2NzksImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwic3ViIjoiZjlhNWZjYTMtYzZhYy00YzM5LTg5Y2QtYWJkYmQxZTM5YTkyIn0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3ODg1NzI2Nzl9XSwic2Vzc2lvbl9pZCI6ImNiYTlhODE3LWUwYzEtNDI5YS04MWVjLWVhNDkwMjg2OTYxYyIsImlzX2Fub255bW91cyI6ZmFsc2V9.ssv7E6_NmTywcfq0EGrkiJLxZ6GbQ3k1m771L0XUG-y0bcrZs96Hgc46lzrOG_qjaEHPIXVH4VRauLgzfVehzw" 
+```

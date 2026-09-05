@@ -4,6 +4,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 from supabase import create_client, Client
 from dotenv import load_dotenv
+from middleware.auth import require_auth
 
 # ========================================================
 # App & Supabase setup
@@ -26,32 +27,32 @@ class UserCredentials(BaseModel):
     email: str
     password: str
 
-# ==========================================================================
-# Middleware: require_auth
-# Verifies the "Authorization: Bearer <token>" header against Supabase.
-# ==========================================================================
-def require_auth(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    token = credentials.credentials
-    if not token:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Access token required",
-        )
+# # ==========================================================================
+# # Middleware: require_auth
+# # Verifies the "Authorization: Bearer <token>" header against Supabase.
+# # ==========================================================================
+# def require_auth(credentials: HTTPAuthorizationCredentials = Depends(security)):
+#     token = credentials.credentials
+#     if not token:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Access token required",
+#         )
         
-    try:
-        # Ask Supabase to validate the token and return the associated user
-        response = supabase.auth.get_user(token)
-        if not response.user:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid or expired token"
-            )
-        return response.user
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, 
-            detail="Invalid or expired token"
-        )
+#     try:
+#         # Ask Supabase to validate the token and return the associated user
+#         response = supabase.auth.get_user(token)
+#         if not response.user:
+#             raise HTTPException(
+#                 status_code=status.HTTP_401_UNAUTHORIZED,
+#                 detail="Invalid or expired token"
+#             )
+#         return response.user
+#     except Exception:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED, 
+#             detail="Invalid or expired token"
+#         )
 
 # ==========================================================================
 # POST /auth/signup
@@ -112,3 +113,33 @@ def protected_profile(user = Depends(require_auth)):
         "email": user.email,
         "accountCreated": user.created_at,
     }
+    
+# ==========================================================================
+# GET /protected/dashboard
+# Another protected route using the SAME require_auth dependency.
+# ==========================================================================
+
+@app.get("/protected/dashboard", status_code=status.HTTP_200_OK)
+def protected_dashboard(user=Depends(require_auth)):
+    return {
+        "message": "Welcome to your dashboard!",
+        "id": user.id,
+        "email": user.email,
+    }
+
+
+# ==========================================================================
+# POST /auth/logout
+# Protected route. Signs the user out through Supabase.
+# ==========================================================================
+
+@app.post("/auth/logout", status_code=status.HTTP_204_NO_CONTENT)
+def logout(user=Depends(require_auth)):
+    try:
+        supabase.auth.sign_out()
+        return None
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Logout failed"
+        )      
