@@ -1,4 +1,9 @@
-# Build a secure API with Supabase Auth (FastAPI)
+# A Secure API with Supabase Auth (FastAPI)
+A secure API that handles user authentication: Sign Up, Log In, Log Out and protects specific routes
+so they answer only for logged-in users. It uses Supabase Auth as your Identity Provider to manage accounts
+and issue JSON Web Tokens (JWTs), verify those tokens to guard "user-only" endpoints, document the flow in
+Swagger UI.
+
 
 ### Authentication Flow
 
